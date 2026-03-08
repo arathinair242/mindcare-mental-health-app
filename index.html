@@ -304,6 +304,140 @@
         </div>
     </footer>
 
+    <!-- Assessment Modal -->
+    <div class="modal-overlay" id="assessment-modal">
+        <div class="modal-container">
+            <button class="modal-close" aria-label="Close modal"><i class="ri-close-line"></i></button>
+            <div class="modal-header">
+                <h3>Find Your Therapist</h3>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="assessment-progress"></div>
+                </div>
+                <p class="step-indicator">Step <span id="current-step">1</span> of 4</p>
+            </div>
+            
+            <div class="modal-body">
+                <!-- Step 1 -->
+                <div class="assessment-step active" id="step-1">
+                    <h4>What type of therapy are you looking for?</h4>
+                    <div class="options-grid">
+                        <label class="option-card">
+                            <input type="radio" name="therapy_type" value="individual">
+                            <div class="option-content">
+                                <i class="ri-user-line"></i>
+                                <span>Individual (for myself)</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="therapy_type" value="couples">
+                            <div class="option-content">
+                                <i class="ri-group-line"></i>
+                                <span>Couples (for us)</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="therapy_type" value="teen">
+                            <div class="option-content">
+                                <i class="ri-mickey-line"></i>
+                                <span>Teen (for my child)</span>
+                            </div>
+                        </label>
+                        <label class="option-card">
+                            <input type="radio" name="therapy_type" value="psychiatry">
+                            <div class="option-content">
+                                <i class="ri-capsule-line"></i>
+                                <span>Psychiatry (medication)</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="assessment-step" id="step-2">
+                    <h4>What are your main reasons for seeking help?</h4>
+                    <p class="step-subtitle">Select all that apply</p>
+                    <div class="tags-selector">
+                        <label class="tag-checkbox">
+                            <input type="checkbox" name="reasons" value="anxiety">
+                            <span>Anxiety / Stress</span>
+                        </label>
+                        <label class="tag-checkbox">
+                            <input type="checkbox" name="reasons" value="depression">
+                            <span>Depression</span>
+                        </label>
+                        <label class="tag-checkbox">
+                            <input type="checkbox" name="reasons" value="relationships">
+                            <span>Relationship issues</span>
+                        </label>
+                        <label class="tag-checkbox">
+                            <input type="checkbox" name="reasons" value="trauma">
+                            <span>Trauma / Grief</span>
+                        </label>
+                        <label class="tag-checkbox">
+                            <input type="checkbox" name="reasons" value="focus">
+                            <span>ADHD / Focus</span>
+                        </label>
+                        <label class="tag-checkbox">
+                            <input type="checkbox" name="reasons" value="sleep">
+                            <span>Sleep issues</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="assessment-step" id="step-3">
+                    <h4>Do you have any preferences for your therapist?</h4>
+                    <div class="preferences-list">
+                        <div class="pref-item">
+                            <label>Gender preference</label>
+                            <select class="form-control">
+                                <option value="any">No preference</option>
+                                <option value="female">Female</option>
+                                <option value="male">Male</option>
+                                <option value="nonbinary">Non-binary</option>
+                            </select>
+                        </div>
+                        <div class="pref-item">
+                            <label>Age preference</label>
+                            <select class="form-control">
+                                <option value="any">No preference</option>
+                                <option value="younger">Younger (under 40)</option>
+                                <option value="older">Older (40+)</option>
+                            </select>
+                        </div>
+                        <div class="pref-item">
+                            <label>Language</label>
+                            <select class="form-control">
+                                <option value="english">English</option>
+                                <option value="spanish">Spanish</option>
+                                <option value="french">French</option>
+                                <option value="mandarin">Mandarin</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="assessment-step" id="step-4">
+                    <div class="success-state text-center">
+                        <div class="success-icon"><i class="ri-checkbox-circle-fill"></i></div>
+                        <h4>You're all set!</h4>
+                        <p>We're processing your preferences to find the best matches. Create an account to see your recommended therapists.</p>
+                        <div class="form-group" style="text-align: left; margin-top: 2rem;">
+                            <label>Email Address</label>
+                            <input type="email" class="form-control" placeholder="you@example.com">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="btn-back" disabled>Back</button>
+                <button class="btn btn-primary" id="btn-next">Next Step</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 
