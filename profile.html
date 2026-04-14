@@ -13,6 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/therapist-apply.css">
     <style>
         .profile-section {
             padding: 8rem 0 4rem 0;
@@ -216,6 +217,22 @@
                     <h1 class="profile-name" id="user-name">Loading...</h1>
                     <p class="profile-email" id="user-email">Loading...</p>
 
+                    <!-- Therapist Badge & Tag (shown dynamically) -->
+                    <div id="therapist-badge-container" style="display:none; margin-bottom: 1rem;">
+                        <span class="profile-therapist-badge badge-verified" id="therapist-badge">
+                            <i class="ri-verified-badge-fill"></i> Verified Therapist
+                        </span>
+                        <br>
+                        <span class="profile-therapist-tag" id="therapist-tag">
+                            <i class="ri-stethoscope-line"></i> Licensed Therapist
+                        </span>
+                    </div>
+                    <div id="therapist-pending-container" style="display:none; margin-bottom: 1rem;">
+                        <span class="profile-therapist-badge badge-pending" id="therapist-pending-badge">
+                            <i class="ri-time-line"></i> Verification Pending
+                        </span>
+                    </div>
+
                     <div class="profile-details" id="profile-details">
                         <div class="detail-item">
                             <span class="detail-label">Age</span>
@@ -234,7 +251,8 @@
                     <div id="action-buttons">
                         <button id="edit-profile-btn" class="btn btn-primary" style="margin-right: 0.5rem;">Edit
                             Profile</button>
-                        <button id="logout-btn-profile" class="btn btn-outline">Log Out</button>
+                        <button id="logout-btn-profile" class="btn btn-outline" style="margin-right: 0.5rem;">Log Out</button>
+                        <button id="delete-account-btn" class="btn btn-outline" style="color: #ef4444; border-color: #fca5a5;">Delete Account</button>
                     </div>
 
                     <form id="edit-profile-form" style="display: none;">
@@ -281,14 +299,36 @@
                     style="margin-top: 1rem; width: 100%;">Cancel</button>
             </div>
         </div>
+
+        <!-- Delete Account Modal -->
+        <div class="avatar-modal" id="delete-modal" style="display: none; z-index: 10001;">
+            <div class="avatar-modal-content" style="text-align: left; max-width: 450px;">
+                <h3 style="color: var(--text-main); margin-bottom: 0.5rem;">Delete Account</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">We're sorry to see you go. Please let us know why you are leaving so we can improve our service.</p>
+                
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="delete-feedback" style="display: block; font-weight: 500; margin-bottom: 0.5rem; font-size: 0.9rem;">Feedback (Optional)</label>
+                    <textarea id="delete-feedback" class="form-control" rows="4" placeholder="Your experience using MindCare..." style="width: 100%; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.75rem; font-family: var(--font-sans);"></textarea>
+                </div>
+                
+                <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px;">
+                    <p style="color: #b91c1c; font-size: 0.85rem; margin: 0;"><strong>Warning:</strong> This action is permanent and cannot be undone. All your profile data will be permanently lost.</p>
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-outline" id="cancel-delete-btn" style="flex: 1;">Cancel</button>
+                    <button class="btn btn-primary" id="confirm-delete-btn" style="flex: 1; background: linear-gradient(135deg, #ef4444, #dc2626); border: none;">Permanently Delete</button>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script type="module" src="script/script.js"></script>
     <script type="module" src="script/auth-state.js"></script>
     <script type="module">
         import { auth, db } from './script/firebase-config.js';
-        import { onAuthStateChanged, signOut } from 'firebase/auth';
-        import { doc, getDoc, updateDoc } from 'firebase/firestore';
+        import { onAuthStateChanged, signOut, deleteUser } from 'firebase/auth';
+        import { doc, getDoc, updateDoc, setDoc, deleteDoc } from 'firebase/firestore';
 
         document.addEventListener('DOMContentLoaded', () => {
             const logoutBtn = document.getElementById('logout-btn-profile');
@@ -342,6 +382,69 @@
                     window.location.href = 'index.html';
                 });
             }
+
+            // Account Deletion Logic
+            const deleteBtn = document.getElementById('delete-account-btn');
+            const deleteModal = document.getElementById('delete-modal');
+            const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+            const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+            const deleteFeedback = document.getElementById('delete-feedback');
+
+            deleteBtn?.addEventListener('click', () => { deleteModal.style.display = 'flex'; });
+            cancelDeleteBtn?.addEventListener('click', () => { 
+                deleteModal.style.display = 'none'; 
+                deleteFeedback.value = '';
+            });
+
+            confirmDeleteBtn?.addEventListener('click', async () => {
+                if (!currentUser) return;
+                
+                const feedbackText = deleteFeedback.value.trim();
+                confirmDeleteBtn.textContent = 'Deleting...';
+                confirmDeleteBtn.disabled = true;
+                
+                try {
+                    // Record feedback first
+                    if (feedbackText) {
+                        try {
+                            const feedbackRef = doc(db, 'account_deletion_feedback', currentUser.uid + '_' + Date.now());
+                            await setDoc(feedbackRef, {
+                                userId: currentUser.uid,
+                                email: currentUser.email,
+                                feedback: feedbackText,
+                                deletedAt: new Date().toISOString()
+                            });
+                        } catch (e) { console.warn("Failed to save feedback", e); }
+                    }
+                    
+                    // Cleanup user doc first (while auth token is still valid)
+                    try {
+                        await deleteDoc(doc(db, 'users', currentUser.uid));
+                    } catch (e) { console.warn("Failed to delete user doc", e); }
+                    
+                    // Cleanup therapist application if one exists
+                    try {
+                        await deleteDoc(doc(db, 'therapistApplications', currentUser.uid));
+                    } catch (e) { console.warn("Failed to delete therapist application", e); }
+
+                    // Attempt to delete auth user
+                    await deleteUser(currentUser);
+                    
+                    alert("Your account has been successfully deleted.");
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    console.error("Error deleting account:", error);
+                    if (error.code === 'auth/requires-recent-login') {
+                        alert("For security reasons, please log out and log back in before deleting your account.");
+                    } else {
+                        alert("Failed to delete account. You may need to log out and log back in first.");
+                    }
+                } finally {
+                    confirmDeleteBtn.textContent = 'Permanently Delete';
+                    confirmDeleteBtn.disabled = false;
+                    deleteModal.style.display = 'none';
+                }
+            });
 
             // Toggle Edit mode
             editBtn.addEventListener('click', () => {
@@ -434,6 +537,28 @@
 
                             if (currentData.avatarUrl) {
                                 currentAvatarImg.src = currentData.avatarUrl;
+                            }
+
+                            // --- Therapist Badge Logic ---
+                            const badgeContainer = document.getElementById('therapist-badge-container');
+                            const pendingContainer = document.getElementById('therapist-pending-container');
+                            const therapistStatus = currentData.therapistStatus;
+
+                            if (therapistStatus === 'approved') {
+                                badgeContainer.style.display = 'block';
+                                // Fetch specialty from application for the tag
+                                try {
+                                    const appDoc = await getDoc(doc(db, 'therapistApplications', user.uid));
+                                    if (appDoc.exists()) {
+                                        const appData = appDoc.data();
+                                        const tagEl = document.getElementById('therapist-tag');
+                                        if (appData.licenseType) {
+                                            tagEl.innerHTML = `<i class="ri-stethoscope-line"></i> ${appData.licenseType}`;
+                                        }
+                                    }
+                                } catch (e) { /* ignore */ }
+                            } else if (therapistStatus === 'pending') {
+                                pendingContainer.style.display = 'block';
                             }
                         } else {
                             document.getElementById('user-name').textContent = user.displayName || 'MindCare User';

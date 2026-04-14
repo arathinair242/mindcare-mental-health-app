@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare | Messages</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/chat.css">
+</head>
+
+<body data-wait-for-data="true">
+    <div class="page-loader"><div class="loader-spinner"></div></div>
+
+    <div class="chat-app" id="chat-app" style="display:none;">
+
+        <!-- Chat Sidebar — Conversation List -->
+        <aside class="chat-sidebar" id="chat-sidebar">
+            <div class="chat-sidebar-header">
+                <a href="index.html" class="chat-logo">
+                    <div class="logo-icon"><i class="ri-heart-pulse-fill"></i></div>
+                    <span>MindCare</span>
+                </a>
+                <h2>Messages</h2>
+            </div>
+            <div class="chat-search">
+                <i class="ri-search-line"></i>
+                <input type="text" placeholder="Search conversations..." id="conv-search">
+            </div>
+            <div class="conversation-list" id="conversation-list">
+                <div class="conv-loading" id="conv-loading">
+                    <i class="ri-loader-4-line ri-spin"></i>
+                    <span>Loading...</span>
+                </div>
+            </div>
+            <div class="chat-sidebar-footer">
+                <a href="profile.html" class="sidebar-profile-link" id="sidebar-profile">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=e2e8f0"
+                         alt="Avatar" id="sidebar-avatar">
+                    <span id="sidebar-name">My Profile</span>
+                </a>
+                <a href="therapists.html" class="btn btn-outline btn-sm" style="width:100%; margin-top:0.5rem;">
+                    <i class="ri-stethoscope-line"></i> Find Therapists
+                </a>
+            </div>
+        </aside>
+
+        <!-- Chat Main Area -->
+        <main class="chat-main" id="chat-main">
+
+            <!-- Empty State (no conversation selected) -->
+            <div class="chat-empty" id="chat-empty">
+                <div class="chat-empty-content">
+                    <div class="chat-empty-icon"><i class="ri-chat-smile-3-line"></i></div>
+                    <h2>Welcome to MindCare Messages</h2>
+                    <p>Select a conversation or <a href="therapists.html">find a therapist</a> to start messaging.</p>
+                </div>
+            </div>
+
+            <!-- Active Chat View (hidden by default) -->
+            <div class="chat-active" id="chat-active" style="display:none;">
+
+                <!-- Chat Header -->
+                <div class="chat-header" id="chat-header">
+                    <button class="chat-back-btn" id="chat-back-btn" title="Back to conversations">
+                        <i class="ri-arrow-left-line"></i>
+                    </button>
+                    <img class="chat-header-avatar" id="chat-header-avatar"
+                         src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=e2e8f0" alt="">
+                    <div class="chat-header-info">
+                        <h3 id="chat-header-name">Therapist Name</h3>
+                        <span id="chat-header-meta">Verified Therapist</span>
+                    </div>
+                    <button class="chat-info-toggle" id="chat-info-toggle" title="View client/therapist info">
+                        <i class="ri-information-line"></i>
+                    </button>
+                    <button class="chat-delete-btn" id="chat-delete-btn" title="Delete conversation">
+                        <i class="ri-delete-bin-6-line"></i>
+                    </button>
+                    <button class="chat-rate-btn" id="chat-rate-btn" title="Rate this therapist" style="display:none;">
+                        <i class="ri-star-line"></i>
+                    </button>
+                </div>
+
+                <!-- Chat Body layout: messages + info panel -->
+                <div class="chat-body-wrapper">
+
+                    <!-- Messages Area -->
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- Messages populated dynamically -->
+                    </div>
+
+                    <!-- Client Info Side Panel (visible to therapists) -->
+                    <div class="chat-info-panel" id="chat-info-panel">
+                        <div class="info-panel-header">
+                            <h4><i class="ri-user-heart-line"></i> Client Profile</h4>
+                            <button class="info-panel-close" id="info-panel-close"><i class="ri-close-line"></i></button>
+                        </div>
+                        <div class="info-panel-body" id="info-panel-body">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input -->
+                <div class="chat-input-area">
+                    <div class="reply-preview" id="reply-preview" style="display:none;">
+                        <div class="reply-preview-content">
+                            <span id="reply-preview-name">Name</span>
+                            <p id="reply-preview-text">Message text...</p>
+                        </div>
+                        <button id="reply-preview-close"><i class="ri-close-line"></i></button>
+                    </div>
+                    <div class="chat-input-wrapper">
+                        <textarea id="chat-input" placeholder="Type your message..." rows="1"></textarea>
+                        <button class="chat-send-btn" id="chat-send-btn" title="Send message">
+                            <i class="ri-send-plane-2-fill"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Rating Modal -->
+    <div class="rating-modal-overlay" id="rating-modal" style="display:none;">
+        <div class="rating-modal">
+            <h3><i class="ri-star-smile-line" style="color:#f59e0b;"></i> Rate Your Therapist</h3>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.25rem;">How was your experience?</p>
+            <div class="star-rating" id="star-rating">
+                <i class="ri-star-line" data-star="1"></i>
+                <i class="ri-star-line" data-star="2"></i>
+                <i class="ri-star-line" data-star="3"></i>
+                <i class="ri-star-line" data-star="4"></i>
+                <i class="ri-star-line" data-star="5"></i>
+            </div>
+            <p class="star-label" id="star-label">Select a rating</p>
+            <textarea id="rating-comment" placeholder="Leave a comment (optional)..." rows="3"
+                style="width:100%; border:1px solid #e2e8f0; border-radius:10px; padding:0.75rem; font-family:var(--font-sans); font-size:0.85rem; resize:none; margin-top:0.75rem;"></textarea>
+            <div style="display:flex; gap:0.75rem; margin-top:1.25rem;">
+                <button class="btn btn-outline" id="rating-cancel" style="flex:1;">Cancel</button>
+                <button class="btn btn-primary" id="rating-submit" style="flex:1;" disabled>Submit Rating</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="confirm-modal-overlay" id="confirm-modal" style="display:none;">
+        <div class="confirm-modal">
+            <div class="confirm-modal-icon"><i class="ri-error-warning-line"></i></div>
+            <h3 id="confirm-title">Are you sure?</h3>
+            <p id="confirm-text">This action cannot be undone.</p>
+            <div class="confirm-modal-actions">
+                <button class="btn btn-outline" id="confirm-cancel">Cancel</button>
+                <button class="btn btn-danger" id="confirm-ok">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Context Menu -->
+    <div class="msg-context-menu" id="msg-context-menu">
+        <button class="ctx-menu-item" id="ctx-reply-msg">
+            <i class="ri-reply-line"></i> Reply
+        </button>
+        <button class="ctx-menu-item ctx-danger" id="ctx-delete-msg">
+            <i class="ri-delete-bin-line"></i> Delete Message
+        </button>
+    </div>
+
+    <!-- Mobile sidebar overlay -->
+    <div class="chat-sidebar-overlay" id="chat-sidebar-overlay"></div>
+
+    <script type="module" src="script/script.js"></script>
+    <script type="module" src="script/chat.js"></script>
+</body>
+
+</html>

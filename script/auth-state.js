@@ -13,6 +13,26 @@ document.addEventListener('DOMContentLoaded', () => {
     profileBtn.innerHTML = '<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=e2e8f0" alt="Avatar">';
     profileBtn.style.display = 'none';
 
+    // Create 'Messages' button
+    const messagesBtn = document.createElement('a');
+    messagesBtn.href = 'chat.html';
+    messagesBtn.className = 'nav-messages-btn';
+    messagesBtn.innerHTML = '<i class="ri-chat-3-line"></i>';
+    messagesBtn.title = 'Messages';
+    messagesBtn.style.display = 'none';
+    messagesBtn.style.cssText = `
+        display: none;
+        width: 38px; height: 38px;
+        border-radius: 50%;
+        background-color: rgba(15,118,110,0.08);
+        color: var(--primary-color, #0f766e);
+        font-size: 1.15rem;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.2s;
+    `;
+
     // Create 'Log Out' button
     const logoutBtn = document.createElement('button');
     logoutBtn.className = 'nav-logout-btn';
@@ -32,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const loggedInActions = document.createElement('div');
     loggedInActions.style.display = 'flex';
     loggedInActions.style.gap = '1rem';
+    loggedInActions.style.alignItems = 'center';
+    loggedInActions.appendChild(messagesBtn);
     loggedInActions.appendChild(logoutBtn);
     loggedInActions.appendChild(profileBtn);
 
@@ -51,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (signupBtn) signupBtn.style.display = 'none';
                 profileBtn.style.display = 'inline-block';
                 logoutBtn.style.display = 'inline-block';
+                messagesBtn.style.display = 'flex';
 
                 // Fetch avatarUrl
                 try {
@@ -66,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (signupBtn) signupBtn.style.display = 'inline-block';
                 profileBtn.style.display = 'none';
                 logoutBtn.style.display = 'none';
+                messagesBtn.style.display = 'none';
 
                 // Reset to default
                 profileBtn.innerHTML = '<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=e2e8f0" alt="Avatar">';

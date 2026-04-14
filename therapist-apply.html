@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply as Therapist | MindCare Verification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/therapist-apply.css">
+</head>
+
+<body data-wait-for-data="true">
+    <div class="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><i class="ri-heart-pulse-line"></i></div>
+                <span>MindCare</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="how-it-works.html" class="nav-link">Process</a>
+                <a href="therapists.html" class="nav-link active">Therapist</a>
+                <a href="faqs.html" class="nav-link">FAQ</a>
+            </div>
+            <div class="nav-actions">
+                <a href="login.html" class="btn btn-outline">Log In</a>
+                <a href="signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+            <button class="menu-toggle" aria-label="Toggle Menu">
+                <i class="ri-menu-line"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <header class="page-header">
+            <div class="container">
+                <h1 class="page-title">Therapist Verification</h1>
+                <p class="page-subtitle">Complete the form below to apply for verified therapist status on MindCare.</p>
+            </div>
+        </header>
+
+        <section class="apply-section">
+            <div class="container">
+                <div class="apply-card" id="apply-card">
+
+                    <!-- Progress Steps -->
+                    <div class="apply-progress">
+                        <div class="progress-step active" data-step="1">
+                            <div class="progress-step-circle">1</div>
+                            <span>Personal</span>
+                        </div>
+                        <div class="progress-connector active"></div>
+                        <div class="progress-step" data-step="2">
+                            <div class="progress-step-circle">2</div>
+                            <span>Credentials</span>
+                        </div>
+                        <div class="progress-connector"></div>
+                        <div class="progress-step" data-step="3">
+                            <div class="progress-step-circle">3</div>
+                            <span>Specialties</span>
+                        </div>
+                        <div class="progress-connector"></div>
+                        <div class="progress-step" data-step="4">
+                            <div class="progress-step-circle">4</div>
+                            <span>Review</span>
+                        </div>
+                    </div>
+
+                    <form id="therapist-apply-form" novalidate>
+
+                        <!-- Step 1: Personal Information -->
+                        <div class="apply-step active" data-step="1">
+                            <div class="step-header">
+                                <div class="step-icon"><i class="ri-user-3-line"></i></div>
+                                <h2>Personal Information</h2>
+                                <p>Tell us about yourself so we can verify your identity.</p>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="apply-fullname">Full Name <span class="required">*</span></label>
+                                    <input type="text" id="apply-fullname" class="form-control" placeholder="Dr. Jane Smith" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="apply-phone">Phone Number <span class="required">*</span></label>
+                                    <input type="tel" id="apply-phone" class="form-control" placeholder="+1 (555) 123-4567" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="apply-bio">Professional Bio <span class="required">*</span></label>
+                                <textarea id="apply-bio" class="form-control" rows="4"
+                                    placeholder="Write a brief summary of your experience, approach, and what drives your practice..." required></textarea>
+                                <span class="form-hint">Minimum 50 characters</span>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="apply-city">City <span class="required">*</span></label>
+                                    <input type="text" id="apply-city" class="form-control" placeholder="New York" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="apply-country">Country <span class="required">*</span></label>
+                                    <input type="text" id="apply-country" class="form-control" placeholder="United States" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Credentials & License -->
+                        <div class="apply-step" data-step="2">
+                            <div class="step-header">
+                                <div class="step-icon"><i class="ri-award-line"></i></div>
+                                <h2>Credentials & Licensing</h2>
+                                <p>Provide your professional qualifications for verification.</p>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="apply-license-type">License Type <span class="required">*</span></label>
+                                    <select id="apply-license-type" class="form-control" required>
+                                        <option value="" disabled selected>Select your license</option>
+                                        <option value="PhD">PhD in Psychology</option>
+                                        <option value="PsyD">PsyD (Doctor of Psychology)</option>
+                                        <option value="LCSW">LCSW (Licensed Clinical Social Worker)</option>
+                                        <option value="LMFT">LMFT (Marriage & Family Therapist)</option>
+                                        <option value="LPC">LPC (Licensed Professional Counselor)</option>
+                                        <option value="MD-Psychiatry">MD — Psychiatry</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="apply-license-number">License Number <span class="required">*</span></label>
+                                    <input type="text" id="apply-license-number" class="form-control" placeholder="e.g. PSY-123456" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="apply-issuing-body">Issuing Authority <span class="required">*</span></label>
+                                    <input type="text" id="apply-issuing-body" class="form-control"
+                                        placeholder="e.g. State Board of Psychology" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="apply-years">Years of Experience <span class="required">*</span></label>
+                                    <input type="number" id="apply-years" class="form-control" min="0" max="60" placeholder="e.g. 8" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="apply-education">Educational Background <span class="required">*</span></label>
+                                <textarea id="apply-education" class="form-control" rows="3"
+                                    placeholder="e.g. PhD in Clinical Psychology, Stanford University (2015)" required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Specialties -->
+                        <div class="apply-step" data-step="3">
+                            <div class="step-header">
+                                <div class="step-icon"><i class="ri-mental-health-line"></i></div>
+                                <h2>Areas of Expertise</h2>
+                                <p>Select your areas of specialization (choose at least 1).</p>
+                            </div>
+                            <div class="specialty-grid" id="specialty-grid">
+                                <label class="specialty-chip">
+                                    <input type="checkbox" name="specialties" value="Anxiety">
+                                    <span><i class="ri-mind-map"></i> Anxiety</span>
+                                </label>
+                                <label class="specialty-chip">
+                                    <input type="checkbox" name="specialties" value="Depression">
+                                    <span><i class="ri-drop-line"></i> Depression</span>
+                                </label>
+                                <label class="specialty-chip">
+                                    <input type="checkbox" name="specialties" value="Trauma & PTSD">
+                                    <span><i class="ri-shield-cross-line"></i> Trauma & PTSD</span>
+                                </label>
+                                <label class="specialty-chip">
+                                    <input type="checkbox" name="specialties" value="Relationships">
+                                    <span><i class="ri-heart-2-line"></i> Relationships</span>
+                                </label>
+                                <label class="specialty-chip">
+                                    <input type="checkbox" name="specialties" value="Family Therapy">
+                                    <span><i class="ri-parent-line"></i> Family Therapy</span>
+                                </label>
+                                <label class="specialty-chip">
+                                    <input type="checkbox" name="specialties" value="Substance Abuse">
+                                    <span><i class="ri-capsule-line"></i> Substance Abuse</span>
+                                </label>
+                                <label class="specialty-chip">
+                                    <input type="checkbox" name="specialties" value="OCD">
+                                    <span><i class="ri-loop-left-line"></i> OCD</span>
+                                </label>
+                                <label class="specialty-chip">
+                                    <input type="checkbox" name="specialties" value="ADHD">
+                                    <span><i class="ri-focus-3-line"></i> ADHD</span>
+                                </label>
+                                <label class="specialty-chip">
+                                    <input type="checkbox" name="specialties" value="Grief & Loss">
+                                    <span><i class="ri-emotion-sad-line"></i> Grief & Loss</span>
+                                </label>
+                                <label class="specialty-chip">
+                                    <input type="checkbox" name="specialties" value="Eating Disorders">
+                                    <span><i class="ri-restaurant-line"></i> Eating Disorders</span>
+                                </label>
+                                <label class="specialty-chip">
+                                    <input type="checkbox" name="specialties" value="Stress Management">
+                                    <span><i class="ri-recycle-line"></i> Stress Management</span>
+                                </label>
+                                <label class="specialty-chip">
+                                    <input type="checkbox" name="specialties" value="Self-Esteem">
+                                    <span><i class="ri-star-smile-line"></i> Self-Esteem</span>
+                                </label>
+                            </div>
+
+                            <div class="form-group" style="margin-top: 2rem;">
+                                <label for="apply-approach">Therapeutic Approach</label>
+                                <select id="apply-approach" class="form-control">
+                                    <option value="" disabled selected>Select your primary approach</option>
+                                    <option value="CBT">Cognitive Behavioral Therapy (CBT)</option>
+                                    <option value="DBT">Dialectical Behavior Therapy (DBT)</option>
+                                    <option value="Psychodynamic">Psychodynamic Therapy</option>
+                                    <option value="Humanistic">Humanistic / Person-Centered</option>
+                                    <option value="EMDR">EMDR</option>
+                                    <option value="Integrative">Integrative / Eclectic</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Review & Submit -->
+                        <div class="apply-step" data-step="4">
+                            <div class="step-header">
+                                <div class="step-icon"><i class="ri-file-check-line"></i></div>
+                                <h2>Review & Submit</h2>
+                                <p>Please review your information before submitting.</p>
+                            </div>
+                            <div class="review-card" id="review-summary">
+                                <!-- Populated via JS -->
+                            </div>
+                            <label class="agree-checkbox">
+                                <input type="checkbox" id="apply-agree" required>
+                                <span>I confirm that all information provided is accurate and I agree to MindCare's
+                                    <a href="#">Terms of Service</a> and <a href="#">Verification Policy</a>.</span>
+                            </label>
+                        </div>
+
+                        <!-- Success State (hidden by default) -->
+                        <div class="apply-step apply-success" data-step="success" style="display:none;">
+                            <div class="success-content">
+                                <div class="success-checkmark">
+                                    <i class="ri-checkbox-circle-fill"></i>
+                                </div>
+                                <h2>Application Submitted!</h2>
+                                <p>Thank you for applying. Your credentials are being reviewed. You'll receive a
+                                    <strong>Verified Therapist</strong> badge on your profile once approved.</p>
+                                <div class="success-actions">
+                                    <a href="profile.html" class="btn btn-primary btn-lg"><i class="ri-user-line"></i> Go to
+                                        Profile</a>
+                                    <a href="therapists.html" class="btn btn-outline btn-lg">Back to Therapists</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+                    <!-- Navigation Buttons -->
+                    <div class="apply-nav" id="apply-nav">
+                        <button type="button" class="btn btn-outline btn-lg" id="apply-prev" disabled>
+                            <i class="ri-arrow-left-line"></i> Back
+                        </button>
+                        <button type="button" class="btn btn-primary btn-lg" id="apply-next">
+                            Next <i class="ri-arrow-right-line"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container centered-footer">
+            <div class="footer-brand-centered">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon"><i class="ri-heart-pulse-fill"></i></div>
+                    <span>MindCare</span>
+                </a>
+            </div>
+            <div class="footer-socials">
+                <a href="#" aria-label="Facebook"><i class="ri-facebook-fill"></i></a>
+                <a href="#" aria-label="Twitter"><i class="ri-twitter-x-line"></i></a>
+                <a href="#" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="ri-linkedin-fill"></i></a>
+            </div>
+            <div class="footer-divider"></div>
+            <div class="footer-bottom-row">
+                <div class="footer-copyright">
+                    <p>&copy; 2026 MindCare Inc. All rights reserved.</p>
+                </div>
+                <div class="footer-legal-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Settings</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="script/script.js"></script>
+    <script type="module" src="script/auth-state.js"></script>
+    <script type="module" src="script/therapist-apply.js"></script>
+</body>
+
+</html>

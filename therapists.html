@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/therapist-apply.css">
 </head>
 
 <body>
@@ -44,8 +45,37 @@
             </div>
         </header>
 
-        <section class="therapists-page">
+        <!-- Dynamic Verified Therapists from Firestore -->
+        <section class="therapists-page" id="verified-therapists-section">
             <div class="container">
+                <div class="section-header" style="margin-bottom: 2rem;">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:0.5rem; margin-bottom:0.5rem;">
+                        <i class="ri-verified-badge-fill" style="color:var(--primary-color); font-size:1.25rem;"></i>
+                        <h2 class="section-title" style="margin-bottom:0;">Verified Professionals</h2>
+                    </div>
+                    <p class="section-description">Connect directly with our verified, licensed therapists.</p>
+                </div>
+                <div class="therapist-grid" id="verified-therapist-grid">
+                    <!-- Populated dynamically from Firestore -->
+                    <div class="therapist-loading" id="therapist-loading">
+                        <i class="ri-loader-4-line ri-spin" style="font-size:2rem; color:var(--primary-color);"></i>
+                        <p style="color:var(--text-muted); margin-top:0.75rem;">Loading verified therapists...</p>
+                    </div>
+                </div>
+                <div class="no-therapists" id="no-therapists" style="display:none; text-align:center; padding:2rem;">
+                    <i class="ri-user-search-line" style="font-size:3rem; color:#cbd5e1;"></i>
+                    <p style="color:var(--text-muted); margin-top:0.75rem;">No verified therapists yet. Check back soon!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Static Featured Therapists (fallback/demo) -->
+        <section class="therapists-page" style="padding-top:0;">
+            <div class="container">
+                <div class="section-header" style="margin-bottom: 2rem;">
+                    <h2 class="section-title">Featured Professionals</h2>
+                    <p class="section-description">Some of our trusted team members.</p>
+                </div>
                 <div class="therapist-grid">
                     <div class="therapist-card">
                         <div class="therapist-image">
@@ -73,9 +103,6 @@
                         <div class="therapist-image">
                             <span class="therapist-rating"><i class="ri-star-fill"></i> 4.8</span>
                             <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Sarah Jenkins, LMFT">
-                            <div class="therapist-image-overlay">
-                                <a href="assessment.html" class="btn btn-primary btn-assessment">Book Session</a>
-                            </div>
                         </div>
                         <div class="therapist-info">
                             <div class="therapist-name-row">
@@ -94,9 +121,6 @@
                         <div class="therapist-image">
                             <span class="therapist-rating"><i class="ri-star-fill"></i> 4.9</span>
                             <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Dr. Robert Patel">
-                            <div class="therapist-image-overlay">
-                                <a href="assessment.html" class="btn btn-primary btn-assessment">Book Session</a>
-                            </div>
                         </div>
                         <div class="therapist-info">
                             <h3 class="therapist-name">Dr. Robert Patel</h3>
@@ -111,7 +135,99 @@
                 </div>
             </div>
         </section>
+
+        <!-- Join as Therapist CTA -->
+        <section class="therapist-cta-section" id="join-therapist">
+            <div class="container">
+                <div class="therapist-cta-box">
+                    <div class="therapist-cta-glow"></div>
+                    <div class="therapist-cta-glow therapist-cta-glow--alt"></div>
+                    <div class="therapist-cta-content">
+                        <div class="therapist-cta-icon">
+                            <i class="ri-stethoscope-line"></i>
+                        </div>
+                        <h2>Are You a Therapist?</h2>
+                        <p>Join our growing community of licensed mental health professionals. Get verified, reach more
+                            clients, and make a real difference — all on one platform.</p>
+                        <div class="therapist-cta-perks">
+                            <div class="perk-item">
+                                <i class="ri-verified-badge-fill"></i>
+                                <span>Verified Badge</span>
+                            </div>
+                            <div class="perk-item">
+                                <i class="ri-user-heart-line"></i>
+                                <span>Client Matching</span>
+                            </div>
+                            <div class="perk-item">
+                                <i class="ri-shield-check-line"></i>
+                                <span>Trusted Platform</span>
+                            </div>
+                        </div>
+                        <a href="therapist-apply.html" class="btn btn-primary btn-lg" id="therapist-apply-btn">
+                            <i class="ri-arrow-right-line"></i> Apply Now
+                        </a>
+                        <p class="therapist-cta-note">
+                            <i class="ri-information-line"></i> You must have a MindCare account to apply.
+                            <a href="signup.html">Create one here</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
+
+    <!-- Therapist Detail Modal -->
+    <div class="tp-modal-overlay" id="tp-detail-modal" style="display:none;">
+        <div class="tp-modal">
+            <button class="tp-modal-close" id="tp-modal-close"><i class="ri-close-line"></i></button>
+            <div class="tp-modal-body" id="tp-modal-body">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Intake Form Modal (before first chat) -->
+    <div class="tp-modal-overlay" id="intake-modal" style="display:none;">
+        <div class="tp-modal" style="max-width:480px;">
+            <button class="tp-modal-close" id="intake-close"><i class="ri-close-line"></i></button>
+            <div style="padding:2rem;">
+                <div style="text-align:center; margin-bottom:1.5rem;">
+                    <i class="ri-questionnaire-line" style="font-size:2.5rem; color:var(--primary-color);"></i>
+                    <h3 style="margin-top:0.5rem;">Tell Us About Your Needs</h3>
+                    <p style="color:var(--text-muted); font-size:0.85rem;">This helps your therapist understand how to support you.</p>
+                </div>
+                <div class="intake-form" id="intake-form">
+                    <label style="font-weight:600; font-size:0.85rem; display:block; margin-bottom:0.4rem;">What type of support are you looking for?</label>
+                    <select id="intake-type" class="form-control" style="margin-bottom:1rem;">
+                        <option value="">Select one...</option>
+                        <option value="individual">Individual Therapy</option>
+                        <option value="couples">Couples Therapy</option>
+                        <option value="teen">Teen Counseling</option>
+                        <option value="family">Family Therapy</option>
+                    </select>
+
+                    <label style="font-weight:600; font-size:0.85rem; display:block; margin-bottom:0.4rem;">What's bringing you here? (select all that apply)</label>
+                    <div class="intake-reasons" id="intake-reasons" style="display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:1rem;">
+                        <label class="intake-chip"><input type="checkbox" value="anxiety"> Anxiety</label>
+                        <label class="intake-chip"><input type="checkbox" value="depression"> Depression</label>
+                        <label class="intake-chip"><input type="checkbox" value="relationships"> Relationships</label>
+                        <label class="intake-chip"><input type="checkbox" value="trauma"> Trauma</label>
+                        <label class="intake-chip"><input type="checkbox" value="stress"> Stress</label>
+                        <label class="intake-chip"><input type="checkbox" value="sleep"> Sleep Issues</label>
+                        <label class="intake-chip"><input type="checkbox" value="other"> Other</label>
+                    </div>
+
+                    <label style="font-weight:600; font-size:0.85rem; display:block; margin-bottom:0.4rem;">Anything else you'd like to share?</label>
+                    <textarea id="intake-note" class="form-control" placeholder="Optional — describe what you're going through..." rows="3"
+                        style="resize:none; margin-bottom:1.25rem;"></textarea>
+
+                    <button class="btn btn-primary" id="intake-submit" style="width:100%;" disabled>
+                        <i class="ri-chat-3-line"></i> Start Conversation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer class="footer">
         <div class="container centered-footer">
@@ -121,18 +237,13 @@
                     <span>MindCare</span>
                 </a>
             </div>
-            
-
-
             <div class="footer-socials">
                 <a href="#" aria-label="Facebook"><i class="ri-facebook-fill"></i></a>
                 <a href="#" aria-label="Twitter"><i class="ri-twitter-x-line"></i></a>
                 <a href="#" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
                 <a href="#" aria-label="LinkedIn"><i class="ri-linkedin-fill"></i></a>
             </div>
-
             <div class="footer-divider"></div>
-            
             <div class="footer-bottom-row">
                 <div class="footer-copyright">
                     <p>&copy; 2026 MindCare Inc. All rights reserved.</p>
@@ -146,9 +257,387 @@
         </div>
     </footer>
 
+    <style>
+        /* Detail Modal */
+        .tp-modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+            animation: fadeInOv 0.2s ease; padding: 1rem;
+        }
+        @keyframes fadeInOv { from { opacity: 0; } to { opacity: 1; } }
+
+        .tp-modal {
+            background: #fff; border-radius: 20px; width: 100%; max-width: 640px;
+            max-height: 90vh; overflow-y: auto; position: relative;
+            box-shadow: 0 25px 60px -12px rgba(0,0,0,0.25);
+            animation: modalUp 0.3s ease;
+        }
+        @keyframes modalUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.96); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .tp-modal-close {
+            position: absolute; top: 1rem; right: 1rem; z-index: 2;
+            width: 36px; height: 36px; border-radius: 50%; border: none;
+            background: rgba(0,0,0,0.06); cursor: pointer; font-size: 1.25rem;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-main); transition: all 0.2s;
+        }
+        .tp-modal-close:hover { background: rgba(0,0,0,0.12); }
+
+        /* Modal Content */
+        .tp-profile-header {
+            display: flex; gap: 1.25rem; align-items: center; padding: 2rem 2rem 1rem;
+        }
+        .tp-profile-avatar {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: #f1f5f9; flex-shrink: 0; object-fit: contain;
+        }
+        .tp-profile-name { font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .tp-profile-name i { color: var(--primary-color); font-size: 1.1rem; }
+        .tp-profile-meta { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.15rem; }
+        .tp-profile-rating { display: flex; align-items: center; gap: 0.3rem; margin-top: 0.3rem; font-size: 0.9rem; }
+        .tp-profile-rating .stars { color: #f59e0b; }
+        .tp-profile-rating .count { color: #94a3b8; font-size: 0.78rem; }
+
+        .tp-profile-body { padding: 0 2rem 2rem; }
+
+        .tp-section { margin-top: 1.25rem; }
+        .tp-section-title {
+            font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.06em; color: var(--primary-color);
+            margin-bottom: 0.5rem; padding-bottom: 0.35rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        .tp-bio {
+            font-size: 0.88rem; color: var(--text-main); line-height: 1.65;
+            background: #f8fafc; padding: 0.85rem; border-radius: 10px;
+            border-left: 3px solid var(--primary-color);
+        }
+        .tp-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+        .tp-tag {
+            background: var(--primary-light); color: var(--primary-color);
+            padding: 0.2rem 0.65rem; border-radius: 999px;
+            font-size: 0.72rem; font-weight: 600;
+        }
+        .tp-info-row {
+            display: flex; justify-content: space-between; padding: 0.35rem 0; font-size: 0.85rem;
+        }
+        .tp-info-label { color: var(--text-muted); }
+        .tp-info-value { color: var(--text-main); font-weight: 600; }
+
+        /* Reviews */
+        .tp-review {
+            padding: 0.85rem; border: 1px solid #f1f5f9; border-radius: 12px;
+            margin-bottom: 0.5rem; background: #fafbfc;
+        }
+        .tp-review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem; }
+        .tp-review-name { font-weight: 600; font-size: 0.82rem; }
+        .tp-review-stars { color: #f59e0b; font-size: 0.85rem; }
+        .tp-review-text { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+        .tp-review-date { font-size: 0.7rem; color: #94a3b8; margin-top: 0.3rem; }
+
+        .tp-msg-btn {
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            width: 100%; padding: 0.85rem; margin-top: 1.5rem;
+            background: linear-gradient(135deg, #0f766e, #14b8a6); color: #fff;
+            border: none; border-radius: 12px; font-size: 1rem; font-weight: 700;
+            cursor: pointer; transition: all 0.2s; font-family: var(--font-sans);
+        }
+        .tp-msg-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px -4px rgba(15,118,110,0.35); }
+
+        /* Intake Chips */
+        .intake-chip {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            padding: 0.35rem 0.75rem; border: 1.5px solid #e2e8f0; border-radius: 999px;
+            font-size: 0.78rem; font-weight: 500; cursor: pointer; transition: all 0.2s;
+            background: #fff; color: var(--text-main);
+        }
+        .intake-chip input { display: none; }
+        .intake-chip:has(input:checked) {
+            background: var(--primary-light); border-color: var(--primary-color);
+            color: var(--primary-color); font-weight: 600;
+        }
+
+        /* Make verified cards clickable */
+        .therapist-card.clickable-card { cursor: pointer; transition: all 0.3s; }
+        .therapist-card.clickable-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px -8px rgba(15,118,110,0.2);
+        }
+
+        @media (max-width: 640px) {
+            .tp-profile-header { flex-direction: column; text-align: center; padding: 1.5rem 1.5rem 0.5rem; }
+            .tp-profile-body { padding: 0 1.5rem 1.5rem; }
+            .tp-modal { max-height: 95vh; border-radius: 16px; }
+        }
+    </style>
+
     <script type="module" src="script/script.js"></script>
-<script type="module" src="script/auth-state.js"></script>
+    <script type="module" src="script/auth-state.js"></script>
+    <script type="module">
+        import { db, auth } from './script/firebase-config.js';
+        import { collection, getDocs, getDoc, doc, query, where, setDoc, serverTimestamp } from 'firebase/firestore';
+        import { onAuthStateChanged } from 'firebase/auth';
+
+        let allTherapists = []; // Store for modal access
+        let pendingTherapist = null; // For intake flow
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const grid = document.getElementById('verified-therapist-grid');
+            const loading = document.getElementById('therapist-loading');
+            const noTherapists = document.getElementById('no-therapists');
+
+            // Wait for auth state
+            const currentUser = await new Promise(resolve => {
+                onAuthStateChanged(auth, (user) => resolve(user));
+            });
+
+            // Load current user data
+            let currentUserData = null;
+            if (currentUser) {
+                try {
+                    const uDoc = await getDoc(doc(db, 'users', currentUser.uid));
+                    if (uDoc.exists()) currentUserData = uDoc.data();
+                } catch (e) {}
+            }
+
+            try {
+                const q = query(collection(db, 'therapistApplications'), where('status', '==', 'approved'));
+                const snapshot = await getDocs(q);
+                loading.style.display = 'none';
+
+                const therapists = [];
+                snapshot.forEach(docSnap => {
+                    const uid = docSnap.id;
+                    if (currentUser && uid === currentUser.uid) return;
+                    therapists.push({ uid, ...docSnap.data() });
+                });
+
+                if (therapists.length === 0) { noTherapists.style.display = 'block'; return; }
+
+                // Fetch avatars + ratings for each
+                for (const t of therapists) {
+                    try {
+                        const userDoc = await getDoc(doc(db, 'users', t.uid));
+                        if (userDoc.exists() && userDoc.data().avatarUrl) t.avatarUrl = userDoc.data().avatarUrl;
+                    } catch (e) {}
+
+                    // Fetch reviews
+                    try {
+                        const rSnap = await getDocs(collection(db, 'therapistApplications', t.uid, 'ratings'));
+                        t.reviews = [];
+                        rSnap.forEach(r => t.reviews.push({ id: r.id, ...r.data() }));
+                    } catch (e) { t.reviews = []; }
+                }
+
+                allTherapists = therapists;
+
+                // Render cards (clickable, no hover message button)
+                therapists.forEach(t => {
+                    const avatarUrl = t.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(t.fullName)}&backgroundColor=e2e8f0`;
+                    const specialties = (t.specialties || []).slice(0, 3).map(s => `<span class="tag">${s}</span>`).join('');
+                    const avgRating = t.avgRating ? parseFloat(t.avgRating).toFixed(1) : null;
+
+                    const card = document.createElement('div');
+                    card.className = 'therapist-card clickable-card';
+                    card.dataset.uid = t.uid;
+                    card.innerHTML = `
+                        <div class="therapist-image">
+                            <span class="therapist-rating" style="background:linear-gradient(135deg,#0f766e,#14b8a6); color:#fff; top:12px; left:12px;">
+                                <i class="ri-verified-badge-fill"></i> Verified
+                            </span>
+                            <span class="therapist-rating" style="top:12px; right:12px; left:auto; ${avgRating ? 'background:#fff; color:#f59e0b; border:1px solid #fde68a;' : 'background:#fff; color:#94a3b8; border:1px solid #e2e8f0;'}">
+                                <i class="ri-star-${avgRating ? 'fill' : 'line'}"></i> ${avgRating || 'New'}
+                            </span>
+                            <img src="${avatarUrl}" alt="${t.fullName}" style="object-fit:contain; background:#f1f5f9;">
+                        </div>
+                        <div class="therapist-info">
+                            <div class="therapist-name-row">
+                                <h3 class="therapist-name">${t.fullName}</h3>
+                                <span class="credential">${t.licenseType || ''}</span>
+                            </div>
+                            <p class="therapist-specialty">${t.yearsExperience || 0} years experience · ${t.city || ''}</p>
+                            <div class="therapist-tags" style="margin-top:0.4rem;">${specialties}</div>
+                        </div>
+                    `;
+                    card.addEventListener('click', () => openTherapistDetail(t));
+                    grid.appendChild(card);
+                });
+
+            } catch (err) {
+                console.error('Error loading therapists:', err);
+                loading.innerHTML = '<p style="color:var(--text-muted);">Could not load therapists.</p>';
+            }
+
+            // ========================================
+            // THERAPIST DETAIL MODAL
+            // ========================================
+            const detailModal = document.getElementById('tp-detail-modal');
+            const detailBody = document.getElementById('tp-modal-body');
+            document.getElementById('tp-modal-close').addEventListener('click', () => detailModal.style.display = 'none');
+            detailModal.addEventListener('click', e => { if (e.target === detailModal) detailModal.style.display = 'none'; });
+
+            function openTherapistDetail(t) {
+                const avatarUrl = t.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(t.fullName)}&backgroundColor=e2e8f0`;
+                const specialties = (t.specialties || []).map(s => `<span class="tp-tag">${s}</span>`).join('');
+                const avgRating = t.avgRating ? parseFloat(t.avgRating).toFixed(1) : null;
+                const ratingCount = t.ratingCount || 0;
+                const starsHtml = avgRating ? '★'.repeat(Math.round(avgRating)) + '☆'.repeat(5 - Math.round(avgRating)) : '☆☆☆☆☆';
+
+                // Reviews
+                let reviewsHtml = '';
+                if (t.reviews && t.reviews.length > 0) {
+                    const sorted = [...t.reviews].sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                    reviewsHtml = sorted.slice(0, 5).map(r => {
+                        const rStars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+                        const date = r.timestamp?.seconds ? new Date(r.timestamp.seconds * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+                        return `
+                            <div class="tp-review">
+                                <div class="tp-review-header">
+                                    <span class="tp-review-name">${escapeHtml(r.userName || 'Anonymous')}</span>
+                                    <span class="tp-review-stars">${rStars}</span>
+                                </div>
+                                ${r.comment ? `<div class="tp-review-text">${escapeHtml(r.comment)}</div>` : ''}
+                                <div class="tp-review-date">${date}</div>
+                            </div>`;
+                    }).join('');
+                } else {
+                    reviewsHtml = '<p style="color:var(--text-muted); font-size:0.82rem; text-align:center; padding:1rem;">No reviews yet. Be the first!</p>';
+                }
+
+                detailBody.innerHTML = `
+                    <div class="tp-profile-header">
+                        <img class="tp-profile-avatar" src="${avatarUrl}" alt="${escapeHtml(t.fullName)}">
+                        <div>
+                            <div class="tp-profile-name">${escapeHtml(t.fullName)} <i class="ri-verified-badge-fill"></i></div>
+                            <div class="tp-profile-meta">${escapeHtml(t.licenseType || '')} · ${t.yearsExperience || 0} years · ${escapeHtml(t.city || '')}${t.country ? ', ' + escapeHtml(t.country) : ''}</div>
+                            <div class="tp-profile-rating">
+                                <span class="stars">${starsHtml}</span>
+                                <span class="count">${avgRating ? avgRating + ' (' + ratingCount + ' reviews)' : 'No ratings yet'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tp-profile-body">
+                        ${t.bio ? `<div class="tp-section"><div class="tp-section-title">About</div><div class="tp-bio">${escapeHtml(t.bio)}</div></div>` : ''}
+
+                        ${specialties ? `<div class="tp-section"><div class="tp-section-title">Specialties</div><div class="tp-tags">${specialties}</div></div>` : ''}
+
+                        ${t.therapeuticApproach ? `<div class="tp-section"><div class="tp-section-title">Therapeutic Approach</div><div class="tp-bio">${escapeHtml(t.therapeuticApproach)}</div></div>` : ''}
+
+                        <div class="tp-section">
+                            <div class="tp-section-title">Credentials</div>
+                            <div class="tp-info-row"><span class="tp-info-label">License</span><span class="tp-info-value">${escapeHtml(t.licenseType || 'N/A')}</span></div>
+                            <div class="tp-info-row"><span class="tp-info-label">Education</span><span class="tp-info-value">${escapeHtml(t.education || 'N/A')}</span></div>
+                            <div class="tp-info-row"><span class="tp-info-label">Experience</span><span class="tp-info-value">${t.yearsExperience || 0} years</span></div>
+                        </div>
+
+                        <div class="tp-section">
+                            <div class="tp-section-title">Client Reviews</div>
+                            ${reviewsHtml}
+                        </div>
+
+                        <button class="tp-msg-btn" id="tp-msg-btn" data-uid="${t.uid}" data-name="${escapeHtml(t.fullName)}">
+                            <i class="ri-chat-3-line"></i> Message ${escapeHtml(t.fullName)}
+                        </button>
+                    </div>
+                `;
+
+                // Message button handler
+                document.getElementById('tp-msg-btn').addEventListener('click', () => {
+                    if (!currentUser) {
+                        alert('Please log in to message a therapist.');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    // Check if user has assessment/intake data
+                    const hasAssessment = currentUserData &&
+                        ((currentUserData.assessmentReasons && currentUserData.assessmentReasons.length > 0) ||
+                         (currentUserData.assessmentTherapyType));
+
+                    if (hasAssessment) {
+                        // User already shared their needs — go to chat
+                        detailModal.style.display = 'none';
+                        window.location.href = `chat.html?therapist=${t.uid}&name=${encodeURIComponent(t.fullName)}`;
+                    } else {
+                        // Show intake form first
+                        pendingTherapist = t;
+                        detailModal.style.display = 'none';
+                        openIntakeForm();
+                    }
+                });
+
+                detailModal.style.display = 'flex';
+            }
+
+            // ========================================
+            // INTAKE FORM (before first chat)
+            // ========================================
+            const intakeModal = document.getElementById('intake-modal');
+            const intakeType = document.getElementById('intake-type');
+            const intakeReasons = document.getElementById('intake-reasons');
+            const intakeNote = document.getElementById('intake-note');
+            const intakeSubmit = document.getElementById('intake-submit');
+
+            document.getElementById('intake-close').addEventListener('click', () => intakeModal.style.display = 'none');
+            intakeModal.addEventListener('click', e => { if (e.target === intakeModal) intakeModal.style.display = 'none'; });
+
+            function openIntakeForm() {
+                // Reset
+                intakeType.value = '';
+                intakeReasons.querySelectorAll('input').forEach(c => c.checked = false);
+                intakeNote.value = '';
+                intakeSubmit.disabled = true;
+                intakeModal.style.display = 'flex';
+            }
+
+            // Enable submit when at least type + 1 reason selected
+            function checkIntakeValid() {
+                const hasType = intakeType.value !== '';
+                const hasReason = [...intakeReasons.querySelectorAll('input:checked')].length > 0;
+                intakeSubmit.disabled = !(hasType && hasReason);
+            }
+            intakeType.addEventListener('change', checkIntakeValid);
+            intakeReasons.addEventListener('change', checkIntakeValid);
+
+            // Submit intake
+            intakeSubmit.addEventListener('click', async () => {
+                if (!currentUser || !pendingTherapist) return;
+
+                intakeSubmit.textContent = 'Saving...';
+                intakeSubmit.disabled = true;
+
+                const assessmentData = {
+                    assessmentTherapyType: intakeType.value,
+                    assessmentReasons: [...intakeReasons.querySelectorAll('input:checked')].map(c => c.value),
+                    assessmentNote: intakeNote.value.trim(),
+                    assessmentCompletedAt: new Date().toISOString()
+                };
+
+                try {
+                    await setDoc(doc(db, 'users', currentUser.uid), assessmentData, { merge: true });
+                    // Update local data
+                    if (currentUserData) Object.assign(currentUserData, assessmentData);
+                } catch (e) {
+                    console.error('Error saving intake:', e);
+                }
+
+                intakeModal.style.display = 'none';
+                intakeSubmit.innerHTML = '<i class="ri-chat-3-line"></i> Start Conversation';
+
+                // Now go to chat
+                window.location.href = `chat.html?therapist=${pendingTherapist.uid}&name=${encodeURIComponent(pendingTherapist.fullName)}`;
+            });
+        });
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+    </script>
 </body>
 </html>
-
-

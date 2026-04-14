@@ -49,7 +49,6 @@
             flex-grow: 1;
         }
 
-        /* Reusing and refining modal-like step styles */
         .assessment-step {
             display: none;
             animation: fadeIn 0.4s ease-out;
@@ -98,11 +97,146 @@
             text-align: center;
         }
 
-        /* Success state styling */
         .success-illustration {
             font-size: 4rem;
             color: #10b981;
             margin-bottom: 1.5rem;
+        }
+
+        /* Match Cards */
+        .match-results {
+            margin-top: 1.5rem;
+        }
+
+        .match-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            margin-bottom: 0.75rem;
+            transition: all 0.25s;
+            background: #fff;
+        }
+
+        .match-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 16px -4px rgba(15,118,110,0.15);
+            transform: translateY(-2px);
+        }
+
+        .match-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            background-color: var(--primary-light);
+            object-fit: contain;
+        }
+
+        .match-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .match-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .match-name i {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+
+        .match-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.15rem;
+        }
+
+        .match-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            margin-top: 0.4rem;
+        }
+
+        .match-tag {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 600;
+        }
+
+        .match-tag.highlight {
+            background: linear-gradient(135deg, #0f766e, #14b8a6);
+            color: #fff;
+        }
+
+        .match-action {
+            flex-shrink: 0;
+        }
+
+        .match-msg-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #0f766e, #14b8a6);
+            color: #fff;
+            border: none;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-family: var(--font-sans);
+        }
+
+        .match-msg-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px -3px rgba(15,118,110,0.4);
+        }
+
+        .match-score {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            background: var(--primary-light);
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+        }
+
+        .no-matches {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .no-matches i {
+            font-size: 2.5rem;
+            color: #cbd5e1;
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+
+        .match-loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+        }
+
+        .match-loading i {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 0.5rem;
         }
 
         @media (max-width: 640px) {
@@ -113,6 +247,13 @@
                 border-radius: 0;
                 box-shadow: none;
                 min-height: calc(100vh - 80px);
+            }
+            .match-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .match-tags {
+                justify-content: center;
             }
         }
     </style>
@@ -250,15 +391,29 @@
                     </div>
                 </div>
 
-                <!-- Step 4 -->
+                <!-- Step 4: Matched Therapists or Signup Prompt -->
                 <div class="assessment-step" data-step="4">
-                    <div class="success-state text-center">
-                        <div class="success-illustration"><i class="ri-checkbox-circle-fill"></i></div>
-                        <h3>You're all set!</h3>
-                        <p>We've analyzed your responses. Create an account to see your personalized therapist matches.</p>
-                        <div class="form-group" style="text-align: left; margin-top: 2.5rem; max-width: 400px; margin-inline: auto;">
-                            <label>Email Address</label>
-                            <input type="email" class="form-control" placeholder="you@example.com">
+                    <!-- For logged-in users: Show matched therapists -->
+                    <div id="match-results-logged-in" style="display:none;">
+                        <div class="success-state text-center">
+                            <div class="success-illustration"><i class="ri-user-heart-fill"></i></div>
+                            <h3>Your Matches Are Ready!</h3>
+                            <p style="color:var(--text-muted); margin-bottom:0.5rem;">Based on your responses, here are therapists who can help with your needs.</p>
+                        </div>
+                        <div class="match-results" id="match-results">
+                            <div class="match-loading">
+                                <i class="ri-loader-4-line ri-spin"></i>
+                                Finding your best matches...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- For non-logged-in users: Prompt signup -->
+                    <div id="match-results-guest" style="display:none;">
+                        <div class="success-state text-center">
+                            <div class="success-illustration"><i class="ri-checkbox-circle-fill"></i></div>
+                            <h3>You're all set!</h3>
+                            <p>We've analyzed your responses. Create an account to see your personalized therapist matches.</p>
                         </div>
                     </div>
                 </div>
@@ -304,6 +459,202 @@
 
     <script type="module" src="script/script.js"></script>
 <script type="module" src="script/auth-state.js"></script>
+<script type="module">
+    import { auth, db } from './script/firebase-config.js';
+    import { onAuthStateChanged } from 'firebase/auth';
+    import { doc, setDoc, collection, getDocs, query, where } from 'firebase/firestore';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        let currentUser = null;
+        let matchesLoaded = false;
+
+        onAuthStateChanged(auth, (user) => { currentUser = user; });
+
+        const container = document.getElementById('assessment-container');
+        if (!container) return;
+
+        const nextBtn = container.querySelector('#assessment-next');
+        const prevBtn = container.querySelector('#assessment-prev');
+        const steps = container.querySelectorAll('.assessment-step');
+
+        // Specialty-to-reason mapping for matching
+        const reasonToSpecialty = {
+            'anxiety': ['Anxiety', 'Stress Management', 'Anxiety Disorders'],
+            'depression': ['Depression', 'Mood Disorders'],
+            'relationships': ['Relationships', 'Couples Therapy', 'Family Therapy'],
+            'trauma': ['Trauma & PTSD', 'PTSD', 'Grief & Loss'],
+            'focus': ['ADHD', 'ADHD & Focus', 'Focus'],
+            'sleep': ['Sleep Issues', 'Insomnia', 'Sleep Disorders']
+        };
+
+        // Watch for step changes
+        const observer = new MutationObserver(() => {
+            const activeStep = container.querySelector('.assessment-step.active');
+            if (!activeStep) return;
+            const stepNum = parseInt(activeStep.dataset.step);
+
+            if (stepNum === steps.length) {
+                handleFinalStep();
+            }
+        });
+        observer.observe(container, { subtree: true, attributes: true, attributeFilter: ['class'] });
+
+        async function handleFinalStep() {
+            // Collect assessment data
+            const therapyType = container.querySelector('input[name="therapy_type"]:checked')?.value || '';
+            const reasons = [...container.querySelectorAll('input[name="reasons"]:checked')].map(c => c.value);
+            const genderPref = container.querySelectorAll('.form-control')[0]?.value || 'any';
+            const agePref = container.querySelectorAll('.form-control')[1]?.value || 'any';
+            const language = container.querySelectorAll('.form-control')[2]?.value || 'english';
+
+            const assessmentData = {
+                assessmentTherapyType: therapyType,
+                assessmentReasons: reasons,
+                assessmentPreferences: { gender: genderPref, age: agePref, language: language },
+                assessmentCompletedAt: new Date().toISOString()
+            };
+
+            // Save to localStorage always
+            localStorage.setItem('mindcare_assessment', JSON.stringify(assessmentData));
+
+            if (currentUser) {
+                // LOGGED IN — show matched therapists
+                document.getElementById('match-results-logged-in').style.display = 'block';
+                document.getElementById('match-results-guest').style.display = 'none';
+
+                // Save to Firestore
+                try {
+                    await setDoc(doc(db, 'users', currentUser.uid), assessmentData, { merge: true });
+                } catch (e) { console.error('Error saving assessment:', e); }
+
+                // Update button
+                nextBtn.textContent = 'Browse All Therapists';
+                nextBtn.onclick = () => { window.location.href = 'therapists.html'; };
+                if (prevBtn) { prevBtn.style.display = 'none'; }
+
+                // Load matches
+                if (!matchesLoaded) {
+                    matchesLoaded = true;
+                    await loadMatches(reasons);
+                }
+            } else {
+                // NOT LOGGED IN — show signup prompt
+                document.getElementById('match-results-logged-in').style.display = 'none';
+                document.getElementById('match-results-guest').style.display = 'block';
+                nextBtn.textContent = 'Create Account';
+                nextBtn.onclick = () => { window.location.href = 'signup.html'; };
+            }
+        }
+
+        async function loadMatches(reasons) {
+            const resultsContainer = document.getElementById('match-results');
+
+            try {
+                const q = query(
+                    collection(db, 'therapistApplications'),
+                    where('status', '==', 'approved')
+                );
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    resultsContainer.innerHTML = `
+                        <div class="no-matches">
+                            <i class="ri-user-search-line"></i>
+                            <p style="color:var(--text-muted);">No verified therapists available yet. Check back soon!</p>
+                            <a href="therapists.html" style="color:var(--primary-color); font-weight:600;">Browse all therapists</a>
+                        </div>`;
+                    return;
+                }
+
+                // Score and rank therapists
+                let therapists = [];
+                snapshot.forEach(docSnap => {
+                    const t = { id: docSnap.id, ...docSnap.data() };
+                    t.matchScore = calculateMatchScore(t, reasons);
+                    therapists.push(t);
+                });
+
+                // Sort by match score descending
+                therapists.sort((a, b) => b.matchScore - a.matchScore);
+
+                // Render top matches (up to 5)
+                const topMatches = therapists.slice(0, 5);
+                resultsContainer.innerHTML = topMatches.map(t => {
+                    const avatarUrl = t.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(t.fullName)}&backgroundColor=e2e8f0`;
+                    const matchingSpecialties = getMatchingSpecialties(t, reasons);
+                    const otherSpecialties = (t.specialties || []).filter(s => !matchingSpecialties.includes(s)).slice(0, 2);
+                    const scorePercent = Math.min(Math.round(t.matchScore * 100), 99);
+
+                    return `
+                        <div class="match-card">
+                            <img class="match-avatar" src="${avatarUrl}" alt="${escapeHtml(t.fullName)}">
+                            <div class="match-info">
+                                <div class="match-name">
+                                    ${escapeHtml(t.fullName)}
+                                    <i class="ri-verified-badge-fill"></i>
+                                    <span class="match-score">${scorePercent}% match</span>
+                                </div>
+                                <div class="match-meta">${escapeHtml(t.licenseType || '')} · ${t.yearsExperience || 0} yrs exp · ${escapeHtml(t.city || '')}</div>
+                                <div class="match-tags">
+                                    ${matchingSpecialties.map(s => `<span class="match-tag highlight">${escapeHtml(s)}</span>`).join('')}
+                                    ${otherSpecialties.map(s => `<span class="match-tag">${escapeHtml(s)}</span>`).join('')}
+                                </div>
+                            </div>
+                            <div class="match-action">
+                                <a href="chat.html?therapist=${t.id}&name=${encodeURIComponent(t.fullName)}" class="match-msg-btn">
+                                    <i class="ri-chat-3-line"></i> Message
+                                </a>
+                            </div>
+                        </div>`;
+                }).join('');
+
+            } catch (e) {
+                console.error('Error loading matches:', e);
+                resultsContainer.innerHTML = '<p style="text-align:center; color:var(--text-muted);">Could not load matches. <a href="therapists.html">Browse therapists</a></p>';
+            }
+        }
+
+        function calculateMatchScore(therapist, reasons) {
+            if (!reasons || reasons.length === 0) return 0.5;
+            const specialties = (therapist.specialties || []).map(s => s.toLowerCase());
+            let matches = 0;
+
+            reasons.forEach(reason => {
+                const related = (reasonToSpecialty[reason] || []).map(s => s.toLowerCase());
+                const found = specialties.some(spec => 
+                    related.some(r => spec.includes(r) || r.includes(spec))
+                );
+                if (found) matches++;
+            });
+
+            const baseScore = reasons.length > 0 ? matches / reasons.length : 0;
+            // Boost experienced therapists slightly
+            const expBoost = Math.min((therapist.yearsExperience || 0) / 50, 0.15);
+            return Math.min(baseScore + expBoost, 1);
+        }
+
+        function getMatchingSpecialties(therapist, reasons) {
+            const specialties = therapist.specialties || [];
+            const matching = [];
+            reasons.forEach(reason => {
+                const related = (reasonToSpecialty[reason] || []).map(s => s.toLowerCase());
+                specialties.forEach(spec => {
+                    if (related.some(r => spec.toLowerCase().includes(r) || r.includes(spec.toLowerCase()))) {
+                        if (!matching.includes(spec)) matching.push(spec);
+                    }
+                });
+            });
+            return matching;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+    });
+</script>
 </body>
 </html>
 

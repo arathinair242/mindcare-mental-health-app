@@ -22,6 +22,10 @@
         <div class="loader-wave-text" data-text="MINDCARE">MINDCARE</div>
     </div>
     <nav class="navbar">
+        <div style="background-color: #f59e0b; color: white; text-align: center; padding: 0.6rem 1rem; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.02em; width: 100%;">
+            <i class="ri-error-warning-line" style="margin-right: 0.25rem; font-size: 1rem; vertical-align: middle;"></i> 
+            Notice: This website is a Mini Project developed for a Web Programming academic subject. It is NOT an actual functioning therapy or counseling service.
+        </div>
         <div class="container nav-container">
             <a href="index.html" class="logo">
                 <div class="logo-icon"><i class="ri-heart-pulse-line"></i></div>
@@ -45,7 +49,7 @@
 
     <main>
         <!-- Hero Section -->
-        <section class="hero">
+        <section class="hero" style="padding-top: calc(120px + var(--spacing-xl));">
             <div class="container hero-container">
                 <div class="hero-content">
                     <div class="badge">Online Counseling</div>
@@ -95,28 +99,40 @@
         </section>
 
         <!-- How it Works Summary -->
-        <section class="how-it-works-summary">
+        <section class="how-it-works-summary" style="background-color: #f8fafc; padding: 5rem 0;">
             <div class="container">
                 <div class="section-header text-center">
                     <h2 class="section-title">How MindCare Works</h2>
                     <p class="section-description">Begin your journey to better mental health in three simple steps.</p>
                 </div>
-                <div class="steps-summary">
-                    <div class="step-summary-item">
-                        <div class="step-num">1</div>
-                        <h3>Assessment</h3>
+                <div class="steps-summary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 3.5rem; text-align: center;">
+                    <!-- Step 1 -->
+                    <div class="step-summary-item" style="padding: 2.5rem 1.5rem; background: #fff; border-radius: 1rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; transition: transform 0.3s ease;">
+                        <div class="step-icon" style="width: 72px; height: 72px; margin: 0 auto 1.5rem; background: var(--primary-light); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.25rem;">
+                            <i class="ri-clipboard-line"></i>
+                        </div>
+                        <h3 style="margin-bottom: 0.75rem; font-size: 1.35rem; color: #0f172a;">1. Assessment</h3>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Answer a few quick questions about your needs, preferences, and what you're looking for.</p>
                     </div>
-                    <div class="step-summary-item">
-                        <div class="step-num">2</div>
-                        <h3>Match</h3>
+                    <!-- Step 2 -->
+                    <div class="step-summary-item" style="padding: 2.5rem 1.5rem; background: #fff; border-radius: 1rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; transition: transform 0.3s ease;">
+                        <div class="step-icon" style="width: 72px; height: 72px; margin: 0 auto 1.5rem; background: var(--primary-light); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.25rem;">
+                            <i class="ri-user-heart-line"></i>
+                        </div>
+                        <h3 style="margin-bottom: 0.75rem; font-size: 1.35rem; color: #0f172a;">2. Match</h3>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Get paired with a verified, licensed therapist who specializes in exactly what you need.</p>
                     </div>
-                    <div class="step-summary-item">
-                        <div class="step-num">3</div>
-                        <h3>Therapy</h3>
+                    <!-- Step 3 -->
+                    <div class="step-summary-item" style="padding: 2.5rem 1.5rem; background: #fff; border-radius: 1rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; transition: transform 0.3s ease;">
+                        <div class="step-icon" style="width: 72px; height: 72px; margin: 0 auto 1.5rem; background: var(--primary-light); color: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.25rem;">
+                            <i class="ri-chat-smile-3-line"></i>
+                        </div>
+                        <h3 style="margin-bottom: 0.75rem; font-size: 1.35rem; color: #0f172a;">3. Therapy</h3>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">Start communicating with your therapist via secure messaging at your own pace.</p>
                     </div>
                 </div>
-                <div class="text-center" style="margin-top: 2rem;">
-                    <a href="how-it-works.html" class="btn btn-outline">Learn More About the Process</a>
+                <div class="text-center" style="margin-top: 3.5rem; display: flex; justify-content: center;">
+                    <a href="how-it-works.html" class="btn btn-outline" style="min-width: 220px;">Learn More About the Process</a>
                 </div>
             </div>
         </section>

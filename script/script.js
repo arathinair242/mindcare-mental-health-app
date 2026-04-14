@@ -16,6 +16,27 @@ window.hideLoader = function (enforceDelay = false) {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const navActions = document.querySelector('.nav-actions');
+
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            if (navActions) navActions.classList.toggle('active');
+            
+            // Toggle hamburger icon to X
+            const icon = menuToggle.querySelector('i');
+            if (icon.classList.contains('ri-menu-line')) {
+                icon.classList.remove('ri-menu-line');
+                icon.classList.add('ri-close-line');
+            } else {
+                icon.classList.remove('ri-close-line');
+                icon.classList.add('ri-menu-line');
+            }
+        });
+    }
+
     // Navbar scroll effect
     const navbar = document.querySelector('.navbar');
 
@@ -148,7 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (nextBtn) {
                 if (currentStep === totalSteps) {
-                    nextBtn.textContent = 'Create Account';
+                    nextBtn.textContent = 'View Matches';
+                    // Let the assessment page script handle this
                     nextBtn.onclick = () => window.location.href = 'signup.html';
                 } else {
                     nextBtn.textContent = 'Next Step';

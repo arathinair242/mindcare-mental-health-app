@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare | Admin Panel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="style/admin.css">
+</head>
+
+<body>
+    <!-- Loader -->
+    <div class="page-loader" id="admin-loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Access Denied Screen (hidden by default) -->
+    <div class="access-denied" id="access-denied" style="display:none;">
+        <div class="access-denied-card">
+            <div class="access-denied-icon"><i class="ri-shield-keyhole-line"></i></div>
+            <h2>Access Denied</h2>
+            <p>You don't have administrator privileges. Only authorized accounts can access this panel.</p>
+            <a href="index.html" class="btn btn-primary btn-lg"><i class="ri-home-line"></i> Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Admin Shell -->
+    <div class="admin-shell" id="admin-shell" style="display:none;">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="admin-sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <div class="sidebar-logo-icon"><i class="ri-heart-pulse-fill"></i></div>
+                    <span>MindCare</span>
+                </a>
+                <span class="sidebar-label">Admin</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="sidebar-link active" data-tab="dashboard">
+                    <i class="ri-dashboard-3-line"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="sidebar-link" data-tab="applications">
+                    <i class="ri-file-list-3-line"></i>
+                    <span>Applications</span>
+                    <span class="sidebar-badge" id="pending-count-badge" style="display:none;">0</span>
+                </button>
+                <button class="sidebar-link" data-tab="users">
+                    <i class="ri-group-line"></i>
+                    <span>Users</span>
+                </button>
+                <button class="sidebar-link" data-tab="feedback">
+                    <i class="ri-message-3-line"></i>
+                    <span>Feedback</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="admin-user-info" id="admin-user-info">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Admin&backgroundColor=e2e8f0"
+                        alt="Admin" class="admin-avatar" id="admin-avatar">
+                    <div class="admin-user-details">
+                        <span class="admin-user-name" id="admin-user-name">Admin</span>
+                        <span class="admin-user-email" id="admin-user-email">admin@mindcare.com</span>
+                    </div>
+                </div>
+                <button class="sidebar-link sidebar-logout" id="admin-logout-btn">
+                    <i class="ri-logout-box-r-line"></i>
+                    <span>Log Out</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+
+            <!-- Top Bar -->
+            <header class="admin-topbar">
+                <button class="topbar-menu-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+                    <i class="ri-menu-2-line"></i>
+                </button>
+                <h1 class="topbar-title" id="topbar-title">Dashboard</h1>
+                <div class="topbar-actions">
+                    <a href="index.html" class="topbar-link" title="View Site">
+                        <i class="ri-external-link-line"></i> View Site
+                    </a>
+                </div>
+            </header>
+
+            <!-- ===== TAB: Dashboard ===== -->
+            <section class="admin-tab active" id="tab-dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card stat-card--users">
+                        <div class="stat-card-icon"><i class="ri-group-line"></i></div>
+                        <div class="stat-card-body">
+                            <span class="stat-card-value" id="stat-total-users">—</span>
+                            <span class="stat-card-label">Total Users</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-card--pending">
+                        <div class="stat-card-icon"><i class="ri-time-line"></i></div>
+                        <div class="stat-card-body">
+                            <span class="stat-card-value" id="stat-pending">—</span>
+                            <span class="stat-card-label">Pending Applications</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-card--approved">
+                        <div class="stat-card-icon"><i class="ri-verified-badge-line"></i></div>
+                        <div class="stat-card-body">
+                            <span class="stat-card-value" id="stat-approved">—</span>
+                            <span class="stat-card-label">Approved Therapists</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-card--rejected">
+                        <div class="stat-card-icon"><i class="ri-close-circle-line"></i></div>
+                        <div class="stat-card-body">
+                            <span class="stat-card-value" id="stat-rejected">—</span>
+                            <span class="stat-card-label">Rejected</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Applications Preview -->
+                <div class="admin-panel-card">
+                    <div class="panel-card-header">
+                        <h3><i class="ri-file-list-3-line"></i> Recent Pending Applications</h3>
+                        <button class="btn btn-outline btn-sm" id="view-all-apps-btn">View All</button>
+                    </div>
+                    <div class="panel-card-body" id="recent-apps-list">
+                        <div class="empty-state">
+                            <i class="ri-loader-4-line ri-spin"></i>
+                            <p>Loading...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== TAB: Applications ===== -->
+            <section class="admin-tab" id="tab-applications">
+                <div class="tab-header">
+                    <div class="tab-filters">
+                        <button class="filter-chip active" data-filter="all">All</button>
+                        <button class="filter-chip" data-filter="pending">
+                            <i class="ri-time-line"></i> Pending
+                        </button>
+                        <button class="filter-chip" data-filter="approved">
+                            <i class="ri-check-line"></i> Approved
+                        </button>
+                        <button class="filter-chip" data-filter="rejected">
+                            <i class="ri-close-line"></i> Rejected
+                        </button>
+                    </div>
+                    <div class="tab-search">
+                        <i class="ri-search-line"></i>
+                        <input type="text" placeholder="Search by name or email..." id="app-search-input"
+                            class="search-input">
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="admin-table" id="applications-table">
+                        <thead>
+                            <tr>
+                                <th>Applicant</th>
+                                <th>License</th>
+                                <th>Experience</th>
+                                <th>Status</th>
+                                <th>Applied</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applications-tbody">
+                            <tr>
+                                <td colspan="6" class="table-loading">
+                                    <i class="ri-loader-4-line ri-spin"></i> Loading applications...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ===== TAB: Users ===== -->
+            <section class="admin-tab" id="tab-users">
+                <div class="tab-header">
+                    <div class="tab-filters">
+                        <button class="filter-chip active" data-filter="all">All Users</button>
+                        <button class="filter-chip" data-filter="therapist">
+                            <i class="ri-stethoscope-line"></i> Therapists
+                        </button>
+                        <button class="filter-chip" data-filter="regular">
+                            <i class="ri-user-line"></i> Regular
+                        </button>
+                    </div>
+                    <div class="tab-search">
+                        <i class="ri-search-line"></i>
+                        <input type="text" placeholder="Search users..." id="user-search-input"
+                            class="search-input">
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="admin-table" id="users-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Occupation</th>
+                                <th>Role</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-tbody">
+                            <tr>
+                                <td colspan="6" class="table-loading">
+                                    <i class="ri-loader-4-line ri-spin"></i> Loading users...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ===== TAB: Feedback ===== -->
+            <section class="admin-tab" id="tab-feedback">
+                <div class="tab-header" style="padding: 1.5rem 1.5rem 0;">
+                    <h2><i class="ri-message-3-line" style="color:var(--text-muted); margin-right:8px;"></i> Account Deletion Feedback</h2>
+                </div>
+
+                <div class="table-container">
+                    <table class="admin-table" id="feedback-table">
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th style="width: 50%;">Feedback</th>
+                                <th>Date Deleted</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feedback-tbody">
+                            <tr>
+                                <td colspan="3" class="table-loading">
+                                    <i class="ri-loader-4-line ri-spin"></i> Loading feedback...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Application Detail Modal -->
+    <div class="admin-modal-overlay" id="app-detail-modal">
+        <div class="admin-modal">
+            <div class="admin-modal-header">
+                <h3><i class="ri-file-text-line"></i> Application Details</h3>
+                <button class="admin-modal-close" id="modal-close-btn"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="admin-modal-body" id="modal-body">
+                <!-- Populated dynamically -->
+            </div>
+            <div class="admin-modal-footer" id="modal-footer">
+                <!-- Action buttons populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="admin-toast" id="admin-toast">
+        <i class="ri-check-line"></i>
+        <span id="toast-message">Action completed</span>
+    </div>
+
+    <script type="module" src="script/admin.js"></script>
+</body>
+
+</html>
